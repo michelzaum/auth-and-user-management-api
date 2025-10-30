@@ -45,14 +45,15 @@ This API can serve as a foundation for future applications that require authenti
 | ID | Requirement | Description |
 |----|--------------|-------------|
 | NFR01 | Language | Must be implemented using **Node.js + TypeScript**. |
-| NFR02 | Database | Use **PostgreSQL** with **Prisma ORM**. |
-| NFR03 | Security | Hash passwords using **bcrypt**. |
-| NFR04 | Authentication | Use **JWT** with refresh tokens and expiration times. |
-| NFR05 | Architecture | Apply modular structure (controllers, services, repositories). |
-| NFR06 | Documentation | Generate API docs with **Swagger**. |
-| NFR07 | Version Control | Manage source code with **Git/GitHub**. |
-| NFR08 | Deployment | Deploy using **Render** or **Railway**. |
-| NFR09 | Environment Variables | Secure secrets using `.env` file. |
+| NFR02 | Validation | Use **Zod** to validate required information. |
+| NFR03 | Database | Use **PostgreSQL** with **Prisma ORM**. |
+| NFR04 | Security | Hash passwords using **bcrypt**. |
+| NFR05 | Authentication | Use **JWT** with refresh tokens and expiration times. |
+| NFR06 | Architecture | Apply modular structure (controllers, services, repositories). |
+| NFR07 | Documentation | Generate API docs with **Swagger**. |
+| NFR08 | Version Control | Manage source code with **Git/GitHub**. |
+| NFR09 | Deployment | Deploy using **Render** or **Railway**. |
+| NFR10 | Environment Variables | Secure secrets using `.env` file. |
 
 ---
 
@@ -138,6 +139,9 @@ Swagger documentation will be available at:
 ```bash
 http://localhost:3333/api-docs
 ```
+
+---
+
 ## 📌 Roadmap
 - [ ] Implement user registration and login
 - [ ] Implement endpoint to list the logged user and list all users
