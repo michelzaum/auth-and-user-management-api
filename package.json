@@ -22,6 +22,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
     "prisma": "^6.19.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
