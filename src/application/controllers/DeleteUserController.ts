@@ -7,11 +7,11 @@ export class DeleteUserController implements IController {
   async handler(request: IRequest): Promise<IResponse> {
     const { id } = request.params;
 
-    const result = this.deleteUserUseCase.execute(id);
+    await this.deleteUserUseCase.execute(id);
 
     return {
       statusCode: 200,
-      body: result,
+      body: null,
     }
   }
 }
