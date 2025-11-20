@@ -8,11 +8,11 @@ export class UpdateUserController implements IController {
     const { name, email, password, role } = request.body;
     const { id } = request.params;
 
-    this.updateUserUseCase.execute({ id, name, email, password, role });
+    const result = await this.updateUserUseCase.execute({ id, name, email, password, role });
 
     return {
       statusCode: 200,
-      body: null,
+      body: result,
     }
   }
 }
