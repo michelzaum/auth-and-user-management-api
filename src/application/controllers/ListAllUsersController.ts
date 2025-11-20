@@ -1,5 +1,5 @@
 import { IController, IResponse } from "../interfaces/IController";
-import { ListAllUsersUseCase } from "../useCases/ListAllUsers";
+import { ListAllUsersUseCase } from "../useCases/ListAllUsersUseCase";
 
 export class ListAllUsersController implements IController {
   constructor(private readonly listAllUsersUseCase: ListAllUsersUseCase) {}
