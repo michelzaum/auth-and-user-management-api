@@ -10,7 +10,7 @@ interface IInput {
 
 export class UpdateUserUseCase {
   async execute({ id, name, email, password, role }: IInput) {
-    const result = prismaClient.user.update({
+    const result = await prismaClient.user.update({
       data: {
         name, email, password, role,
       },
