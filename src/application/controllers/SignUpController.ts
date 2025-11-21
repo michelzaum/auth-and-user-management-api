@@ -1,7 +1,8 @@
-import z from "zod";
+import z, { ZodError } from "zod";
 
 import { IController, IRequest, IResponse } from "../interfaces/IController";
 import { SignUpUseCase } from "../useCases/SignUpUseCase";
+import { UserAlreadyExists } from "../errors/UserAlreadyExists";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -23,11 +24,25 @@ export class SignUpController implements IController{
         body: null,
       };
     } catch (error) {
-      console.log(error);
-      return {
-        statusCode: 400,
-        body: null,
+      if (error instanceof ZodError) {
+        return {
+          statusCode: 400,
+          body: {
+            error: error.issues,
+          },
+        };
       }
+
+      if (error instanceof UserAlreadyExists) {
+        return {
+          statusCode: 409,
+          body: {
+            error: 'This e-mail is already registered.',
+          },
+        }  
+      }
+
+      throw error;
     }
   }
 }
