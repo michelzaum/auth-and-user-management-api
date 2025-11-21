@@ -3,7 +3,7 @@ import { sign } from 'jsonwebtoken';
 
 import { prismaClient } from "../../lib/prismaClient";
 import { InvalidCredentials } from "../errors/InvalidCredentials";
-import { config } from '../config/env';
+import { env } from '../config/env';
 
 export class SignInUseCase {
   async execute(email: string, password: string) {
@@ -23,7 +23,7 @@ export class SignInUseCase {
 
     const accessToken = sign(
       { sub: user.id },
-      config.jwtSecret,
+      env.jwtSecret,
       { expiresIn: '1d' },
     );
 
