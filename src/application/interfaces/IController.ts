@@ -1,8 +1,4 @@
-export interface IRequest {
-  body: Record<string, any>;
-  params?: any;
-  headers?: Record<string, any>;
-}
+import { IRequest } from "./IRequest";
 
 export interface IResponse {
   statusCode: number;

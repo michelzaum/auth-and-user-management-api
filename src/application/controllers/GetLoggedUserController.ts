@@ -1,5 +1,6 @@
 import { JwtPayload, verify } from "jsonwebtoken";
-import { IController, IRequest, IResponse } from "../interfaces/IController";
+import { IController, IResponse } from "../interfaces/IController";
+import { IRequest } from "../interfaces/IRequest";
 import { GetLoggedUserUseCase } from "../useCases/GetLoggedUserUseCase";
 import { env } from "../config/env";
 
