@@ -17,15 +17,32 @@ const port = 3001;
 app.use(express.json())
 
 app.post('/users', routeAdapter(makeSignUpController()));
+
+app.post('/sign-in', routeAdapter(makeSignInController()));
+
 app.get(
   '/users',
   middlewareAdapter(makeAuthenticationMiddleware()),
   routeAdapter(makeListAllUsersController()),
 );
-app.put('/users/:id', routeAdapter(makeUpdateUserController()));
-app.delete('/users/:id', routeAdapter(makeDeleteUserController()));
-app.post('/sign-in', routeAdapter(makeSignInController()));
-app.get('/me', routeAdapter(makeGetLoggedUserController()));
+
+app.put(
+  '/users/:id',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeUpdateUserController())
+);
+
+app.delete(
+  '/users/:id',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeDeleteUserController())
+);
+
+app.get(
+  '/me',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeGetLoggedUserController()),
+);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
