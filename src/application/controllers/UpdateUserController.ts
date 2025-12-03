@@ -1,4 +1,5 @@
-import { IController, IRequest, IResponse } from "../interfaces/IController";
+import { IController, IResponse } from "../interfaces/IController";
+import { IRequest } from "../interfaces/IRequest";
 import { UpdateUserUseCase } from "../useCases/UpdateUserUseCase";
 
 export class UpdateUserController implements IController {
