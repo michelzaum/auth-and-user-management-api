@@ -10,6 +10,7 @@ import { makeSignInController } from './factories/makeSignInController';
 import { makeGetLoggedUserController } from './factories/makeGetLoggedUserController';
 import { middlewareAdapter } from './adapters/middlewareAdapter';
 import { makeAuthenticationMiddleware } from './factories/makeAuthenticationMiddleware';
+import { makeRefreshTokenController } from './factories/makeRefreshTokenController';
 
 const app = express();
 const port = 3001;
@@ -42,6 +43,11 @@ app.get(
   '/me',
   middlewareAdapter(makeAuthenticationMiddleware()),
   routeAdapter(makeGetLoggedUserController()),
+);
+
+app.post('/refresh-token',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeRefreshTokenController()),
 );
 
 app.listen(port, () => {
