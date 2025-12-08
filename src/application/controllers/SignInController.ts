@@ -16,12 +16,12 @@ export class SignInController implements IController {
     try {
       const { email, password } = schema.parse(body);
   
-      const accessToken = await this.signInUseCase.execute(email, password);
+      const { accessToken, refreshToken } = await this.signInUseCase.execute(email, password);
 
       return {
         statusCode: 200,
         body: {
-          accessToken,
+          accessToken, refreshToken,
         }
       }
     } catch (error) {
