@@ -19,4 +19,10 @@ export class RefreshTokenRepository {
       }
     });
   }
+
+  async delete(id: string) {
+    return prismaClient.refreshToken.delete({
+      where: { id },
+    });
+  }
 }
