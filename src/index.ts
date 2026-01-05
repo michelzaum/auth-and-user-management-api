@@ -11,6 +11,7 @@ import { makeGetLoggedUserController } from './factories/makeGetLoggedUserContro
 import { middlewareAdapter } from './adapters/middlewareAdapter';
 import { makeAuthenticationMiddleware } from './factories/makeAuthenticationMiddleware';
 import { makeRefreshTokenController } from './factories/makeRefreshTokenController';
+import { makeAuthorizationMiddleware } from './factories/makeAuthorizationMiddleware';
 
 const app = express();
 const port = 3001;
@@ -24,6 +25,7 @@ app.post('/sign-in', routeAdapter(makeSignInController()));
 app.get(
   '/users',
   middlewareAdapter(makeAuthenticationMiddleware()),
+  middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeListAllUsersController()),
 );
 
