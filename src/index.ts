@@ -12,6 +12,7 @@ import { middlewareAdapter } from './adapters/middlewareAdapter';
 import { makeAuthenticationMiddleware } from './factories/makeAuthenticationMiddleware';
 import { makeRefreshTokenController } from './factories/makeRefreshTokenController';
 import { makeAuthorizationMiddleware } from './factories/makeAuthorizationMiddleware';
+import { makeUpdateLoggedUserController } from './factories/makeUpdateLoggedUserController';
 
 const app = express();
 const port = 3001;
@@ -44,9 +45,15 @@ app.delete(
 );
 
 app.get(
-  '/me',
+  '/users/me',
   middlewareAdapter(makeAuthenticationMiddleware()),
   routeAdapter(makeGetLoggedUserController()),
+);
+
+app.patch(
+  '/users/me',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeUpdateLoggedUserController()),
 );
 
 app.post('/refresh-token',
