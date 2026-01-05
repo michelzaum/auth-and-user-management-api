@@ -32,12 +32,14 @@ app.get(
 app.put(
   '/users/:id',
   middlewareAdapter(makeAuthenticationMiddleware()),
+  middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeUpdateUserController())
 );
 
 app.delete(
   '/users/:id',
   middlewareAdapter(makeAuthenticationMiddleware()),
+  middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeDeleteUserController())
 );
 
