@@ -26,7 +26,10 @@ export class SignInUseCase {
     }
 
     const accessToken = sign(
-      { sub: user.id },
+      {
+        sub: user.id,
+        role: user.role,
+      },
       env.jwtSecret,
       { expiresIn: '1d' },
     );
