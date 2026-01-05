@@ -19,7 +19,7 @@ export class UpdateLoggedUserController implements IController {
       }
     }
 
-    const { name, email, password, role } = request.body;
+    const { name, email, password } = request.body;
 
     const [, token] = authorization.split(' ');
 
