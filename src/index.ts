@@ -25,6 +25,24 @@ app.post('/users', routeAdapter(makeSignUpController()));
 app.post('/sign-in', routeAdapter(makeSignInController()));
 
 app.get(
+  '/users/me',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeGetLoggedUserController()),
+);
+
+app.patch(
+  '/users/me',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeUpdateLoggedUserController()),
+);
+
+app.delete(
+  '/users/me',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeDeleteLoggedUserController()),
+);
+
+app.get(
   '/users',
   middlewareAdapter(makeAuthenticationMiddleware()),
   middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
@@ -43,24 +61,6 @@ app.delete(
   middlewareAdapter(makeAuthenticationMiddleware()),
   middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeDeleteUserController())
-);
-
-app.get(
-  '/users/me',
-  middlewareAdapter(makeAuthenticationMiddleware()),
-  routeAdapter(makeGetLoggedUserController()),
-);
-
-app.patch(
-  '/users/me',
-  middlewareAdapter(makeAuthenticationMiddleware()),
-  routeAdapter(makeUpdateLoggedUserController()),
-);
-
-app.delete(
-  '/users/me',
-  middlewareAdapter(makeAuthenticationMiddleware()),
-  routeAdapter(makeDeleteLoggedUserController()),
 );
 
 app.post('/refresh-token',
