@@ -45,21 +45,21 @@ app.delete(
 );
 
 app.get(
-  '/users',
+  '/admin/users',
   middlewareAdapter(makeAuthenticationMiddleware()),
   middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeListAllUsersController()),
 );
 
-app.put(
-  '/users/:id',
+app.patch(
+  '/admin/users/:id',
   middlewareAdapter(makeAuthenticationMiddleware()),
   middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeUpdateUserController())
 );
 
 app.delete(
-  '/users/:id',
+  '/admin/users/:id',
   middlewareAdapter(makeAuthenticationMiddleware()),
   middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeDeleteUserController())
