@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { routeAdapter } from './adapters/routeAdapter';
+import { middlewareAdapter } from './adapters/middlewareAdapter';
 
 import { makeSignUpController } from './factories/makeSignUpController';
 import { makeListAllUsersController } from './factories/makeListAllUsersController';
@@ -8,11 +9,11 @@ import { makeUpdateUserController } from './factories/makeUpdateUserController';
 import { makeDeleteUserController } from './factories/makeDeleteUserController';
 import { makeSignInController } from './factories/makeSignInController';
 import { makeGetLoggedUserController } from './factories/makeGetLoggedUserController';
-import { middlewareAdapter } from './adapters/middlewareAdapter';
 import { makeAuthenticationMiddleware } from './factories/makeAuthenticationMiddleware';
 import { makeRefreshTokenController } from './factories/makeRefreshTokenController';
 import { makeAuthorizationMiddleware } from './factories/makeAuthorizationMiddleware';
 import { makeUpdateLoggedUserController } from './factories/makeUpdateLoggedUserController';
+import { makeDeleteLoggedUserController } from './factories/makeDeleteLoggedUserController';
 
 const app = express();
 const port = 3001;
@@ -54,6 +55,12 @@ app.patch(
   '/users/me',
   middlewareAdapter(makeAuthenticationMiddleware()),
   routeAdapter(makeUpdateLoggedUserController()),
+);
+
+app.delete(
+  '/users/me',
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  routeAdapter(makeDeleteLoggedUserController()),
 );
 
 app.post('/refresh-token',
