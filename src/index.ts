@@ -24,6 +24,8 @@ app.post('/users', routeAdapter(makeSignUpController()));
 
 app.post('/sign-in', routeAdapter(makeSignInController()));
 
+app.post('/refresh-token', routeAdapter(makeRefreshTokenController()));
+
 app.get(
   '/users/me',
   middlewareAdapter(makeAuthenticationMiddleware()),
@@ -61,11 +63,6 @@ app.delete(
   middlewareAdapter(makeAuthenticationMiddleware()),
   middlewareAdapter(makeAuthorizationMiddleware(['ADMIN'])),
   routeAdapter(makeDeleteUserController())
-);
-
-app.post('/refresh-token',
-  middlewareAdapter(makeAuthenticationMiddleware()),
-  routeAdapter(makeRefreshTokenController()),
 );
 
 app.listen(port, () => {
