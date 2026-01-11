@@ -37,11 +37,13 @@ export class SignUpController implements IController{
       }
 
       if (error instanceof UserAlreadyExists) {
+        const { name, httpCode, isOperational, message } = error;
+
         throw new AppError(
-          'User already exists',
-          HttpCodes.Conflict,
-          true,
-          'This user already exists',
+          name,
+          httpCode,
+          isOperational,
+          message,
         );
       }
 
