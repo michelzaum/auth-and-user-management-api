@@ -73,7 +73,8 @@ app.listen(port, () => {
 app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
   if (error) {
     res.status(error.statusCode).json({
-      error: error.message,
+      type: error.name,
+      message: error.message,
       // stack: error.stack, error.stack will be added in the log monitor
     });
   }
