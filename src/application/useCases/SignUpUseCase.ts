@@ -11,23 +11,27 @@ interface IInput {
 
 export class SignUpUseCase {
   async execute({ name, email, password }: IInput) {
-    const userAlreadyExists = await prismaClient.user.findUnique({
-      where: { email },
-    });
-
-    if (userAlreadyExists) {
-      throw new UserAlreadyExists();
+    try {
+      const userAlreadyExists = await prismaClient.user.findUnique({
+        where: { email },
+      });
+  
+      if (userAlreadyExists) {
+        throw new UserAlreadyExists();
+      }
+  
+      const hashedPassword = await hash(password, 8);
+  
+      await prismaClient.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          role: 'USER',
+        },
+      });
+    } catch (error) {
+      throw error
     }
-
-    const hashedPassword = await hash(password, 8);
-
-    await prismaClient.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: 'USER',
-      },
-    });
   }
 }

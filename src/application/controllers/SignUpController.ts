@@ -4,6 +4,8 @@ import { IController, IResponse } from "../interfaces/IController";
 import { IRequest } from "../interfaces/IRequest";
 import { SignUpUseCase } from "../useCases/SignUpUseCase";
 import { UserAlreadyExists } from "../errors/UserAlreadyExists";
+import { AppError } from "../errors/AppError";
+import { HttpCodes } from "../../lib/shared/httpCodes";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -26,21 +28,21 @@ export class SignUpController implements IController{
       };
     } catch (error) {
       if (error instanceof ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            error: error.issues,
-          },
-        };
+        throw new AppError(
+          'Validation Error',
+          HttpCodes.BadRequest,
+          true,
+          `${error.issues[0].path}: ${error.issues[0].message}`,
+        );
       }
 
       if (error instanceof UserAlreadyExists) {
-        return {
-          statusCode: 409,
-          body: {
-            error: 'This e-mail is already registered.',
-          },
-        }  
+        throw new AppError(
+          'User already exists',
+          HttpCodes.Conflict,
+          true,
+          'This user already exists',
+        );
       }
 
       throw error;
