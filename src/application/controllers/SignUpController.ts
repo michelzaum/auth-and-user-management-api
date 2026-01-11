@@ -29,7 +29,7 @@ export class SignUpController implements IController{
     } catch (error) {
       if (error instanceof ZodError) {
         throw new AppError(
-          'Validation Error',
+          error.name,
           HttpCodes.BadRequest,
           true,
           `${error.issues[0].path}: ${error.issues[0].message}`,
