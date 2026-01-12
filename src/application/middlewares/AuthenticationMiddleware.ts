@@ -2,18 +2,22 @@ import { JwtPayload, verify } from "jsonwebtoken";
 import { IData, IMiddleware, IResponse } from "../interfaces/IMiddleware";
 import { IRequest } from "../interfaces/IRequest";
 import { env } from "../config/env";
+import { AppError } from "../errors/AppError";
+import { Unauthorized } from "../errors/Unauthorized";
 
 export class AuthenticationMiddleware implements IMiddleware {
   async handle({ headers }: IRequest): Promise<IResponse | IData> {
     const authorization = headers.authorization;
 
     if (!authorization) {
-      return {
-        statusCode: 401,
-        body: {
-          message: 'Unhautorized',
-        }
-      }
+      const { name, httpCode, isOperational, message } = new Unauthorized();
+
+      throw new AppError(
+        name,
+        httpCode,
+        isOperational,
+        message,
+      );
     }
 
     try {
