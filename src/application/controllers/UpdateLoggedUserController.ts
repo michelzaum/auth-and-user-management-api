@@ -5,6 +5,7 @@ import { UpdateLoggedUserUseCase } from "../useCases/UpdateLoggedUserUseCase";
 import { env } from "../config/env";
 import { Unauthorized } from "../errors/Unauthorized";
 import { AppError } from "../errors/AppError";
+import { InvalidAccessToken } from "../errors/InvalidAccessToken";
 
 export class UpdateLoggedUserController implements IController {
   constructor(private readonly updateLoggedUserUseCase: UpdateLoggedUserUseCase) {}
@@ -31,12 +32,14 @@ export class UpdateLoggedUserController implements IController {
       const { sub: userId } = verify(token, env.jwtSecret) as JwtPayload;
   
       if (!userId) {
-        return {
-          statusCode: 400,
-          body: {
-            error: 'Invalid userId',
-          },
-        }
+        const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+
+        throw new AppError(
+          name,
+          httpCode,
+          isOperational,
+          message,
+        );
       }
   
       const updatedUser = await this.updateLoggedUserUseCase.execute(userId, { name, email, password })
