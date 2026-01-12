@@ -3,6 +3,8 @@ import { IController, IResponse } from "../interfaces/IController";
 import { IRequest } from "../interfaces/IRequest";
 import { GetLoggedUserUseCase } from "../useCases/GetLoggedUserUseCase";
 import { env } from "../config/env";
+import { InvalidAccessToken } from "../errors/InvalidAccessToken";
+import { AppError } from "../errors/AppError";
 
 export class GetLoggedUserController implements IController {
   constructor(private readonly getLoggedUserUseCase: GetLoggedUserUseCase) {}
@@ -11,18 +13,31 @@ export class GetLoggedUserController implements IController {
     const accessToken = request.headers?.authorization;
 
     if (!accessToken) {
-      return {
-        statusCode: 401,
-        body: {
-          error: 'Unauthorized. Invalid access token.'
-        },
-      }
+      const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+
+      throw new AppError(
+        name,
+        httpCode,
+        isOperational,
+        message,
+      );
     }
 
     try {
       const token = accessToken.split(' ')[1];
 
       const { sub: userId } = verify(token, env.jwtSecret) as JwtPayload;
+
+      if (!userId) {
+        const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+
+        throw new AppError(
+          name,
+          httpCode,
+          isOperational,
+          message,
+        );
+      }
 
       // TODO: revisit this to try another option instead of sending empty string
       const user = await this.getLoggedUserUseCase.execute(userId || '');
