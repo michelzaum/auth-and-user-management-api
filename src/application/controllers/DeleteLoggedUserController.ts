@@ -10,37 +10,41 @@ export class DeleteLoggedUserController implements IController {
   constructor(private readonly deleteLoggedUserUseCase: DeleteLoggedUserUseCase) {}
 
   async handler(request: IRequest): Promise<IResponse> {
-    const authorization = request.headers.authorization;
-
-    if (!authorization) {
-      const { name, httpCode, isOperational, message } = new Unauthorized();
-
-      throw new AppError(
-        name,
-        httpCode,
-        isOperational,
-        message,
-      );
-    }
-
-    const [, token] = authorization.split(' ');
-
-    const { sub: userId } = verify(token, env.jwtSecret) as JwtPayload;
-
-    if (!userId) {
-      return {
-        statusCode: 400,
-        body: {
-          error: 'Invalid userId',
+    try {
+      const authorization = request.headers.authorization;
+  
+      if (!authorization) {
+        const { name, httpCode, isOperational, message } = new Unauthorized();
+  
+        throw new AppError(
+          name,
+          httpCode,
+          isOperational,
+          message,
+        );
+      }
+  
+      const [, token] = authorization.split(' ');
+  
+      const { sub: userId } = verify(token, env.jwtSecret) as JwtPayload;
+  
+      if (!userId) {
+        return {
+          statusCode: 400,
+          body: {
+            error: 'Invalid userId',
+          }
         }
       }
-    }
-
-    await this.deleteLoggedUserUseCase.execute(userId);
-
-    return {
-      statusCode: 204,
-      body: null,
+  
+      await this.deleteLoggedUserUseCase.execute(userId);
+  
+      return {
+        statusCode: 204,
+        body: null,
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }
