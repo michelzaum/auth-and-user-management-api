@@ -3,6 +3,8 @@ import { IController, IResponse } from "../interfaces/IController";
 import { IRequest } from "../interfaces/IRequest";
 import { env } from "../config/env";
 import { DeleteLoggedUserUseCase } from "../useCases/DeleteLoggedUserUseCase";
+import { AppError } from "../errors/AppError";
+import { Unauthorized } from "../errors/Unauthorized";
 
 export class DeleteLoggedUserController implements IController {
   constructor(private readonly deleteLoggedUserUseCase: DeleteLoggedUserUseCase) {}
@@ -11,12 +13,14 @@ export class DeleteLoggedUserController implements IController {
     const authorization = request.headers.authorization;
 
     if (!authorization) {
-      return {
-        statusCode: 401,
-        body: {
-          error: 'Unauthorized',
-        }
-      }
+      const { name, httpCode, isOperational, message } = new Unauthorized();
+
+      throw new AppError(
+        name,
+        httpCode,
+        isOperational,
+        message,
+      );
     }
 
     const [, token] = authorization.split(' ');
