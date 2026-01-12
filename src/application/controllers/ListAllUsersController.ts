@@ -5,11 +5,15 @@ export class ListAllUsersController implements IController {
   constructor(private readonly listAllUsersUseCase: ListAllUsersUseCase) {}
 
   async handler(): Promise<IResponse> {
-    const result = await this.listAllUsersUseCase.execute();
-
-    return {
-      statusCode: 200,
-      body: result,
-    };
+    try {
+      const result = await this.listAllUsersUseCase.execute();
+  
+      return {
+        statusCode: 200,
+        body: result,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 }
