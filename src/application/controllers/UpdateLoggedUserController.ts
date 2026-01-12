@@ -3,6 +3,8 @@ import { IController, IResponse } from "../interfaces/IController";
 import { IRequest } from "../interfaces/IRequest";
 import { UpdateLoggedUserUseCase } from "../useCases/UpdateLoggedUserUseCase";
 import { env } from "../config/env";
+import { Unauthorized } from "../errors/Unauthorized";
+import { AppError } from "../errors/AppError";
 
 export class UpdateLoggedUserController implements IController {
   constructor(private readonly updateLoggedUserUseCase: UpdateLoggedUserUseCase) {}
@@ -11,12 +13,14 @@ export class UpdateLoggedUserController implements IController {
     const authorization = request.headers.authorization;
 
     if (!authorization) {
-      return {
-        statusCode: 401,
-        body: {
-          error: 'Unauthorized',
-        },
-      }
+      const { name, httpCode, isOperational, message } = new Unauthorized();
+
+      throw new AppError(
+        name,
+        httpCode,
+        isOperational,
+        message,
+      );
     }
 
     const { name, email, password } = request.body;
