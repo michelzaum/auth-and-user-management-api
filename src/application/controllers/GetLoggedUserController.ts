@@ -39,8 +39,7 @@ export class GetLoggedUserController implements IController {
         );
       }
 
-      // TODO: revisit this to try another option instead of sending empty string
-      const user = await this.getLoggedUserUseCase.execute(userId || '');
+      const user = await this.getLoggedUserUseCase.execute(userId);
 
       return {
         statusCode: 200,
