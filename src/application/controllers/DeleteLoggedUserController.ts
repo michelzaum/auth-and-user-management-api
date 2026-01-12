@@ -5,6 +5,7 @@ import { env } from "../config/env";
 import { DeleteLoggedUserUseCase } from "../useCases/DeleteLoggedUserUseCase";
 import { AppError } from "../errors/AppError";
 import { Unauthorized } from "../errors/Unauthorized";
+import { InvalidAccessToken } from "../errors/InvalidAccessToken";
 
 export class DeleteLoggedUserController implements IController {
   constructor(private readonly deleteLoggedUserUseCase: DeleteLoggedUserUseCase) {}
@@ -29,12 +30,14 @@ export class DeleteLoggedUserController implements IController {
       const { sub: userId } = verify(token, env.jwtSecret) as JwtPayload;
   
       if (!userId) {
-        return {
-          statusCode: 400,
-          body: {
-            error: 'Invalid userId',
-          }
-        }
+        const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+  
+        throw new AppError(
+          name,
+          httpCode,
+          isOperational,
+          message,
+        );
       }
   
       await this.deleteLoggedUserUseCase.execute(userId);
