@@ -3,6 +3,8 @@ import { JwtPayload, verify } from "jsonwebtoken";
 import { IData, IMiddleware, IResponse } from "../interfaces/IMiddleware";
 import { IRequest } from "../interfaces/IRequest";
 import { env } from "../config/env";
+import { AppError } from "../errors/AppError";
+import { Forbidden } from "../errors/Forbidden";
 
 export class AuthorizationMiddleware implements IMiddleware {
   constructor(private readonly allowedRoles: string[]) {}
@@ -33,12 +35,9 @@ export class AuthorizationMiddleware implements IMiddleware {
     const payload = verify(token, env.jwtSecret) as JwtPayload;
 
     if (!this.allowedRoles.includes(payload.role)) {
-      return {
-        statusCode: 403,
-        body: {
-          error: 'Forbidden',
-        },
-      }
+      const { name, httpCode, isOperational, message } = new Forbidden();
+
+      throw new AppError(name, httpCode, isOperational, message);
     }
 
     return {
