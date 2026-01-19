@@ -4,6 +4,7 @@ import { IRequest } from "../interfaces/IRequest";
 import { env } from "../config/env";
 import { AppError } from "../errors/AppError";
 import { Unauthorized } from "../errors/Unauthorized";
+import { InvalidAccessToken } from "../errors/InvalidAccessToken";
 
 export class AuthenticationMiddleware implements IMiddleware {
   async handle({ headers }: IRequest): Promise<IResponse | IData> {
@@ -24,7 +25,9 @@ export class AuthenticationMiddleware implements IMiddleware {
       const [bearer, token] = authorization.split(' ');
 
       if (bearer != 'Bearer') {
-        throw new Error();
+        const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+
+        throw new AppError(name, httpCode, isOperational, message);
       }
 
       const payload = verify(token, env.jwtSecret) as JwtPayload;
@@ -38,12 +41,9 @@ export class AuthenticationMiddleware implements IMiddleware {
         }
       }
     } catch (error) {
-      return {
-        statusCode: 400,
-        body: {
-          message: 'Invalid access token',
-        }
-      }
+      const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+
+      throw new AppError(name, httpCode, isOperational, message);
     }
   }
 }
