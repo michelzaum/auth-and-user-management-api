@@ -5,6 +5,8 @@ import { IRequest } from "../interfaces/IRequest";
 import { env } from "../config/env";
 import { AppError } from "../errors/AppError";
 import { Forbidden } from "../errors/Forbidden";
+import { InvalidAccessToken } from "../errors/InvalidAccessToken";
+import { Unauthorized } from "../errors/Unauthorized";
 
 export class AuthorizationMiddleware implements IMiddleware {
   constructor(private readonly allowedRoles: string[]) {}
@@ -13,23 +15,17 @@ export class AuthorizationMiddleware implements IMiddleware {
     const accessToken = request.headers.authorization;
 
     if (!accessToken) {
-      return {
-        statusCode: 401,
-        body: {
-          error: 'Unauthorized',
-        }
-      }
+      const { name, httpCode, isOperational, message } = new Unauthorized();
+
+      throw new AppError(name, httpCode, isOperational, message);
     }
 
     const [bearer, token] = accessToken.split(' ');
 
     if (bearer !== 'Bearer') {
-      return {
-        statusCode: 400,
-        body: {
-          error: 'Invalid access token',
-        },
-      }
+      const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+
+      throw new AppError(name, httpCode, isOperational, message);
     }
 
     const payload = verify(token, env.jwtSecret) as JwtPayload;
