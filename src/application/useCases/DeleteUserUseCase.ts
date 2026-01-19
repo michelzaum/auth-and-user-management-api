@@ -1,6 +1,6 @@
 import { prismaClient } from "../../lib/prismaClient";
-import { HttpCodes } from "../../lib/shared/httpCodes";
 import { AppError } from "../errors/AppError";
+import { UserNotFound } from "../errors/UserNotFound";
 
 export class DeleteUserUseCase {
   async execute(id: string) {
@@ -10,11 +10,10 @@ export class DeleteUserUseCase {
       });
 
       if (!userToDelete) {
+        const { name, httpCode, isOperational, message } = new UserNotFound(id);
+
         throw new AppError(
-          'User not found',
-          HttpCodes.BadRequest,
-          true,
-          `User with id ${id} not found.`,
+          name, httpCode, isOperational, message
         );
       }
 
