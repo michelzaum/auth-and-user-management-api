@@ -6,13 +6,17 @@ export class DeleteUserController implements IController {
   constructor(private readonly deleteUserUseCase: DeleteUserUseCase) {}
 
   async handler(request: IRequest): Promise<IResponse> {
-    const { id } = request.params;
-
-    await this.deleteUserUseCase.execute(id);
-
-    return {
-      statusCode: 200,
-      body: null,
+    try {
+      const { id } = request.params;
+  
+      await this.deleteUserUseCase.execute(id);
+  
+      return {
+        statusCode: 200,
+        body: null,
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }

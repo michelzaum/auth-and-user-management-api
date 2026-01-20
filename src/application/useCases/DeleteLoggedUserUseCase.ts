@@ -1,13 +1,29 @@
 import { prismaClient } from "../../lib/prismaClient";
 
+import { AppError } from "../errors/AppError";
+import { UserNotFound } from "../errors/UserNotFound";
+
 export class DeleteLoggedUserUseCase {
-  async execute(userId: string) {
-    try {
-      await prismaClient.user.delete({
-        where: { id: userId },
+  async execute(id: string) {
+    await prismaClient.$transaction(async (tx) => {
+      const userToDelete = await tx.user.findUnique({
+        where: { id },
       });
-    } catch (error) {
-      console.log(error);
-    }
+
+      if (!userToDelete) {
+        const { name, httpCode, isOperational, message } = new UserNotFound(id);
+
+        throw new AppError(
+          name,
+          httpCode,
+          isOperational,
+          message,
+        );
+      }
+
+      await tx.user.delete({
+        where: { id },
+      })
+    });
   }
 }

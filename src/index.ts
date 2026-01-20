@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 
 import { routeAdapter } from './adapters/routeAdapter';
 import { middlewareAdapter } from './adapters/middlewareAdapter';
@@ -14,6 +14,7 @@ import { makeRefreshTokenController } from './factories/makeRefreshTokenControll
 import { makeAuthorizationMiddleware } from './factories/makeAuthorizationMiddleware';
 import { makeUpdateLoggedUserController } from './factories/makeUpdateLoggedUserController';
 import { makeDeleteLoggedUserController } from './factories/makeDeleteLoggedUserController';
+import { AppError } from './application/errors/AppError';
 
 const app = express();
 const port = 3001;
@@ -67,4 +68,14 @@ app.delete(
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+
+app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
+  if (error) {
+    res.status(error.statusCode).json({
+      type: error.name,
+      message: error.message,
+      // stack: error.stack, error.stack will be added in the log monitor
+    });
+  }
 });

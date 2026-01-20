@@ -1,4 +1,6 @@
 import { prismaClient } from "../../lib/prismaClient";
+import { AppError } from "../errors/AppError";
+import { UserNotFound } from "../errors/UserNotFound";
 
 interface IInput {
   id: string;
@@ -10,13 +12,30 @@ interface IInput {
 
 export class UpdateUserUseCase {
   async execute({ id, name, email, password, role }: IInput) {
-    const result = await prismaClient.user.update({
-      data: {
-        name, email, password, role,
-      },
-      where: { id },
-    });
+    return await prismaClient.$transaction(async (tx) => {
+      const userToUpdate = await tx.user.findUnique({
+        where: { id },
+      });
 
-    return result;
+      if (!userToUpdate) {
+        const { name, httpCode, isOperational, message } = new UserNotFound(id);
+
+        throw new AppError(
+          name,
+          httpCode,
+          isOperational,
+          message,
+        );
+      }
+
+      const result = await tx.user.update({
+        data: {
+          name, email, password, role,
+        },
+        where: { id },
+      });
+
+      return result;
+    });
   }
 }
