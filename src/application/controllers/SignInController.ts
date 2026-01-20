@@ -1,7 +1,10 @@
 import z, { ZodError } from "zod";
 import { InvalidCredentials } from "../errors/InvalidCredentials";
-import { IController, IRequest, IResponse } from "../interfaces/IController";
+import { IController, IResponse } from "../interfaces/IController";
+import { IRequest } from "../interfaces/IRequest";
 import { SignInUseCase } from "../useCases/SignInUseCase";
+import { AppError } from "../errors/AppError";
+import { HttpCodes } from "../../lib/shared/httpCodes";
 
 const schema = z.object({
   email: z.email().min(1),
@@ -15,31 +18,36 @@ export class SignInController implements IController {
     try {
       const { email, password } = schema.parse(body);
   
-      const accessToken = await this.signInUseCase.execute(email, password);
+      const { accessToken, refreshToken } = await this.signInUseCase.execute(email, password);
 
       return {
         statusCode: 200,
         body: {
-          accessToken,
+          accessToken, refreshToken,
         }
       }
     } catch (error) {
       if (error instanceof InvalidCredentials) {
-        return {
-          statusCode: 401,
-          body: {
-            error: 'Invalid credentials.',
-          },
-        }
+        const { name, httpCode, isOperational, message } = error;
+
+        throw new AppError(
+          name,
+          httpCode,
+          isOperational,
+          message,
+        );
       }
 
       if (error instanceof ZodError) {
-        return {
-          statusCode: 400,
-          body: {
-            error: error.issues,
-          },
-        }
+        const field = error.issues[0].path;
+        const message = error.issues[0].message;
+
+        throw new AppError(
+          error.name,
+          HttpCodes.BadRequest,
+          true,
+          `${field}: ${message}`,
+        );
       }
 
       throw error;
