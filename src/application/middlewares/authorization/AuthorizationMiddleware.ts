@@ -1,12 +1,12 @@
 import { JwtPayload, verify } from "jsonwebtoken";
 
-import { IData, IMiddleware, IResponse } from "../interfaces/IMiddleware";
-import { IRequest } from "../interfaces/IRequest";
-import { env } from "../config/env";
-import { AppError } from "../errors/AppError";
-import { Forbidden } from "../errors/Forbidden";
-import { InvalidAccessToken } from "../errors/InvalidAccessToken";
-import { Unauthorized } from "../errors/Unauthorized";
+import { IData, IMiddleware, IResponse } from "../../interfaces/IMiddleware";
+import { IRequest } from "../../interfaces/IRequest";
+import { env } from "../../config/env";
+import { AppError } from "../../errors/AppError";
+import { Forbidden } from "../../errors/Forbidden";
+import { InvalidAccessToken } from "../../errors/InvalidAccessToken";
+import { Unauthorized } from "../../errors/Unauthorized";
 
 export class AuthorizationMiddleware implements IMiddleware {
   constructor(private readonly allowedRoles: string[]) {}
@@ -20,10 +20,11 @@ export class AuthorizationMiddleware implements IMiddleware {
       throw new AppError(name, httpCode, isOperational, message);
     }
 
-    const [bearer, token] = accessToken.split(' ');
+    const [bearer, token] = accessToken.split(" ");
 
-    if (bearer !== 'Bearer') {
-      const { name, httpCode, isOperational, message } = new InvalidAccessToken();
+    if (bearer !== "Bearer") {
+      const { name, httpCode, isOperational, message } =
+        new InvalidAccessToken();
 
       throw new AppError(name, httpCode, isOperational, message);
     }
@@ -41,8 +42,8 @@ export class AuthorizationMiddleware implements IMiddleware {
         user: {
           id: payload.sub,
           role: payload.role,
-        }
-      }
-    }
+        },
+      },
+    };
   }
 }

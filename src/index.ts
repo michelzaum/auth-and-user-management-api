@@ -7,15 +7,16 @@ import express, { NextFunction, Request, Response } from "express";
 import { routeAdapter } from "./adapters/routeAdapter";
 import { middlewareAdapter } from "./adapters/middlewareAdapter";
 
+import { makeAuthorizationMiddleware } from "./application/middlewares/authorization/makeAuthorizationMiddleware";
+import { makeAuthenticationMiddleware } from "./application/middlewares/authentication/makeAuthenticationMiddleware";
+
 import { makeSignUpController } from "./features/auth/sign-up/makeSignUpController";
 import { makeListAllUsersController } from "./features/users/list-all-users/makeListAllUsersController";
 import { makeUpdateUserController } from "./features/users/update-user/makeUpdateUserController";
 import { makeDeleteUserController } from "./features/users/delete-user/makeDeleteUserController";
 import { makeSignInController } from "./features/auth/sign-in/makeSignInController";
 import { makeGetLoggedUserController } from "./features/users/get-logged-user/makeGetLoggedUserController";
-import { makeAuthenticationMiddleware } from "./application/middlewares/authentication/makeAuthenticationMiddleware";
 import { makeRefreshTokenController } from "./features/auth/refresh-token/makeRefreshTokenController";
-import { makeAuthorizationMiddleware } from "./factories/makeAuthorizationMiddleware";
 import { makeUpdateLoggedUserController } from "./features/users/update-logged-user/makeUpdateLoggedUserController";
 import { makeDeleteLoggedUserController } from "./features/users/delete-logged-user/makeDeleteLoggedUserController";
 import { AppError } from "./application/errors/AppError";
