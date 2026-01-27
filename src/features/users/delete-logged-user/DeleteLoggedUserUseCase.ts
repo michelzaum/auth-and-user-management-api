@@ -1,7 +1,7 @@
-import { prismaClient } from "../../lib/prismaClient";
+import { prismaClient } from "../../../lib/prismaClient";
 
-import { AppError } from "../errors/AppError";
-import { UserNotFound } from "../errors/UserNotFound";
+import { AppError } from "../../../application/errors/AppError";
+import { UserNotFound } from "../../../application/errors/UserNotFound";
 
 export class DeleteLoggedUserUseCase {
   async execute(id: string) {
@@ -13,17 +13,12 @@ export class DeleteLoggedUserUseCase {
       if (!userToDelete) {
         const { name, httpCode, isOperational, message } = new UserNotFound(id);
 
-        throw new AppError(
-          name,
-          httpCode,
-          isOperational,
-          message,
-        );
+        throw new AppError(name, httpCode, isOperational, message);
       }
 
       await tx.user.delete({
         where: { id },
-      })
+      });
     });
   }
 }
