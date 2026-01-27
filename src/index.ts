@@ -7,7 +7,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { routeAdapter } from "./adapters/routeAdapter";
 import { middlewareAdapter } from "./adapters/middlewareAdapter";
 
-import { makeSignUpController } from "./factories/makeSignUpController";
+import { makeSignUpController } from "./features/auth/sign-up/makeSignUpController";
 import { makeListAllUsersController } from "./factories/makeListAllUsersController";
 import { makeUpdateUserController } from "./factories/makeUpdateUserController";
 import { makeDeleteUserController } from "./factories/makeDeleteUserController";

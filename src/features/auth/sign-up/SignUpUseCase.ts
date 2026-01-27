@@ -1,7 +1,7 @@
-import { hash } from 'bcrypt';
+import { hash } from "bcrypt";
 
-import { prismaClient } from '../../lib/prismaClient';
-import { UserAlreadyExists } from '../errors/UserAlreadyExists';
+import { prismaClient } from "../../../lib/prismaClient";
+import { UserAlreadyExists } from "../../../application/errors/UserAlreadyExists";
 
 interface IInput {
   name: string;
@@ -15,23 +15,23 @@ export class SignUpUseCase {
       const userAlreadyExists = await prismaClient.user.findUnique({
         where: { email },
       });
-  
+
       if (userAlreadyExists) {
         throw new UserAlreadyExists();
       }
-  
+
       const hashedPassword = await hash(password, 8);
-  
+
       await prismaClient.user.create({
         data: {
           name,
           email,
           password: hashedPassword,
-          role: 'USER',
+          role: "USER",
         },
       });
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

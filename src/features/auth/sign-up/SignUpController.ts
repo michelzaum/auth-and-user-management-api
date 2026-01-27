@@ -1,11 +1,14 @@
 import z, { ZodError } from "zod";
 
-import { IController, IResponse } from "../interfaces/IController";
-import { IRequest } from "../interfaces/IRequest";
-import { SignUpUseCase } from "../useCases/SignUpUseCase";
-import { UserAlreadyExists } from "../errors/UserAlreadyExists";
-import { AppError } from "../errors/AppError";
-import { HttpCodes } from "../../lib/shared/httpCodes";
+import {
+  IController,
+  IResponse,
+} from "../../../application/interfaces/IController";
+import { IRequest } from "../../../application/interfaces/IRequest";
+import { SignUpUseCase } from "./SignUpUseCase";
+import { UserAlreadyExists } from "../../../application/errors/UserAlreadyExists";
+import { AppError } from "../../../application/errors/AppError";
+import { HttpCodes } from "../../../lib/shared/httpCodes";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -13,7 +16,7 @@ const schema = z.object({
   password: z.string().min(8),
 });
 
-export class SignUpController implements IController{
+export class SignUpController implements IController {
   constructor(private readonly signUpUseCase: SignUpUseCase) {}
 
   async handler({ body }: IRequest): Promise<IResponse> {
@@ -39,12 +42,7 @@ export class SignUpController implements IController{
       if (error instanceof UserAlreadyExists) {
         const { name, httpCode, isOperational, message } = error;
 
-        throw new AppError(
-          name,
-          httpCode,
-          isOperational,
-          message,
-        );
+        throw new AppError(name, httpCode, isOperational, message);
       }
 
       throw error;
