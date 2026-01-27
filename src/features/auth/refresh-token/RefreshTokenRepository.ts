@@ -1,4 +1,4 @@
-import { prismaClient } from '../../lib/prismaClient';
+import { prismaClient } from "../../../lib/prismaClient";
 
 interface ICreateDTO {
   userId: string;
@@ -15,8 +15,9 @@ export class RefreshTokenRepository {
   async create({ userId, expiresAt }: ICreateDTO) {
     return prismaClient.refreshToken.create({
       data: {
-        userId, expiresAt,
-      }
+        userId,
+        expiresAt,
+      },
     });
   }
 

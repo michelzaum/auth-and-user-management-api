@@ -1,6 +1,6 @@
 import { SignInController } from "./SignInController";
-import { RefreshTokenRepository } from "../../../application/repositories/RefreshTokenRepository";
 import { SignInUseCase } from "./SignInUseCase";
+import { RefreshTokenRepository } from "../refresh-token/RefreshTokenRepository";
 
 export function makeSignInController() {
   const refreshTokenRepository = new RefreshTokenRepository();

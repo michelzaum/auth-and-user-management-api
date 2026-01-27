@@ -5,7 +5,7 @@ import { prismaClient } from "../../../lib/prismaClient";
 import { REFRESH_TOKEN_EXP_TIME_IN_DAYS } from "../../../lib/constants";
 import { InvalidCredentials } from "../../../application/errors/InvalidCredentials";
 import { env } from "../../../application/config/env";
-import { RefreshTokenRepository } from "../../../application/repositories/RefreshTokenRepository";
+import { RefreshTokenRepository } from "../refresh-token/RefreshTokenRepository";
 
 export class SignInUseCase {
   constructor(
