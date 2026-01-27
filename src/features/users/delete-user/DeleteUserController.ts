@@ -1,6 +1,9 @@
-import { IController, IResponse } from "../interfaces/IController";
-import { IRequest } from "../interfaces/IRequest";
-import { DeleteUserUseCase } from "../useCases/DeleteUserUseCase";
+import {
+  IController,
+  IResponse,
+} from "../../../application/interfaces/IController";
+import { IRequest } from "../../../application/interfaces/IRequest";
+import { DeleteUserUseCase } from "./DeleteUserUseCase";
 
 export class DeleteUserController implements IController {
   constructor(private readonly deleteUserUseCase: DeleteUserUseCase) {}
@@ -8,13 +11,13 @@ export class DeleteUserController implements IController {
   async handler(request: IRequest): Promise<IResponse> {
     try {
       const { id } = request.params;
-  
+
       await this.deleteUserUseCase.execute(id);
-  
+
       return {
         statusCode: 200,
         body: null,
-      }
+      };
     } catch (error) {
       throw error;
     }
