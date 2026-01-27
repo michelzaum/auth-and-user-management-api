@@ -12,7 +12,7 @@ import { makeListAllUsersController } from "./factories/makeListAllUsersControll
 import { makeUpdateUserController } from "./factories/makeUpdateUserController";
 import { makeDeleteUserController } from "./factories/makeDeleteUserController";
 import { makeSignInController } from "./features/auth/sign-in/makeSignInController";
-import { makeGetLoggedUserController } from "./factories/makeGetLoggedUserController";
+import { makeGetLoggedUserController } from "./features/users/get-logged-user/makeGetLoggedUserController";
 import { makeAuthenticationMiddleware } from "./factories/makeAuthenticationMiddleware";
 import { makeRefreshTokenController } from "./features/auth/refresh-token/makeRefreshTokenController";
 import { makeAuthorizationMiddleware } from "./factories/makeAuthorizationMiddleware";

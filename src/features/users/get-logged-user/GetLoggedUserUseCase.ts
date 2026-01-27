@@ -1,4 +1,4 @@
-import { prismaClient } from "../../lib/prismaClient";
+import { prismaClient } from "../../../lib/prismaClient";
 
 export class GetLoggedUserUseCase {
   async execute(id: string) {
