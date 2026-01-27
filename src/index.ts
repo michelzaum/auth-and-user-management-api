@@ -11,7 +11,7 @@ import { makeSignUpController } from "./factories/makeSignUpController";
 import { makeListAllUsersController } from "./factories/makeListAllUsersController";
 import { makeUpdateUserController } from "./factories/makeUpdateUserController";
 import { makeDeleteUserController } from "./factories/makeDeleteUserController";
-import { makeSignInController } from "./factories/makeSignInController";
+import { makeSignInController } from "./features/auth/sign-in/makeSignInController";
 import { makeGetLoggedUserController } from "./factories/makeGetLoggedUserController";
 import { makeAuthenticationMiddleware } from "./factories/makeAuthenticationMiddleware";
 import { makeRefreshTokenController } from "./factories/makeRefreshTokenController";

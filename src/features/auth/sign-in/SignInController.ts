@@ -1,10 +1,13 @@
 import z, { ZodError } from "zod";
-import { InvalidCredentials } from "../errors/InvalidCredentials";
-import { IController, IResponse } from "../interfaces/IController";
-import { IRequest } from "../interfaces/IRequest";
-import { SignInUseCase } from "../useCases/SignInUseCase";
-import { AppError } from "../errors/AppError";
-import { HttpCodes } from "../../lib/shared/httpCodes";
+import { InvalidCredentials } from "../../../application/errors/InvalidCredentials";
+import {
+  IController,
+  IResponse,
+} from "../../../application/interfaces/IController";
+import { IRequest } from "../../../application/interfaces/IRequest";
+import { SignInUseCase } from "./SignInUseCase";
+import { AppError } from "../../../application/errors/AppError";
+import { HttpCodes } from "../../../lib/shared/httpCodes";
 
 const schema = z.object({
   email: z.email().min(1),
@@ -17,25 +20,24 @@ export class SignInController implements IController {
   async handler({ body }: IRequest): Promise<IResponse> {
     try {
       const { email, password } = schema.parse(body);
-  
-      const { accessToken, refreshToken } = await this.signInUseCase.execute(email, password);
+
+      const { accessToken, refreshToken } = await this.signInUseCase.execute(
+        email,
+        password,
+      );
 
       return {
         statusCode: 200,
         body: {
-          accessToken, refreshToken,
-        }
-      }
+          accessToken,
+          refreshToken,
+        },
+      };
     } catch (error) {
       if (error instanceof InvalidCredentials) {
         const { name, httpCode, isOperational, message } = error;
 
-        throw new AppError(
-          name,
-          httpCode,
-          isOperational,
-          message,
-        );
+        throw new AppError(name, httpCode, isOperational, message);
       }
 
       if (error instanceof ZodError) {
