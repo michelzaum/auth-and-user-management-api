@@ -1,0 +1,51 @@
+import z, { ZodError } from "zod";
+
+import {
+  IController,
+  IResponse,
+} from "../../../application/interfaces/IController";
+import { IRequest } from "../../../application/interfaces/IRequest";
+import { SignUpUseCase } from "./SignUpUseCase";
+import { UserAlreadyExists } from "../../../application/errors/UserAlreadyExists";
+import { AppError } from "../../../application/errors/AppError";
+import { HttpCodes } from "../../../lib/shared/httpCodes";
+
+const schema = z.object({
+  name: z.string().min(1),
+  email: z.email().min(1),
+  password: z.string().min(8),
+});
+
+export class SignUpController implements IController {
+  constructor(private readonly signUpUseCase: SignUpUseCase) {}
+
+  async handler({ body }: IRequest): Promise<IResponse> {
+    try {
+      const { email, name, password } = schema.parse(body);
+
+      await this.signUpUseCase.execute({ name, email, password });
+
+      return {
+        statusCode: 204,
+        body: null,
+      };
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new AppError(
+          error.name,
+          HttpCodes.BadRequest,
+          true,
+          `${error.issues[0].path}: ${error.issues[0].message}`,
+        );
+      }
+
+      if (error instanceof UserAlreadyExists) {
+        const { name, httpCode, isOperational, message } = error;
+
+        throw new AppError(name, httpCode, isOperational, message);
+      }
+
+      throw error;
+    }
+  }
+}

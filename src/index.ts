@@ -7,17 +7,18 @@ import express, { NextFunction, Request, Response } from "express";
 import { routeAdapter } from "./adapters/routeAdapter";
 import { middlewareAdapter } from "./adapters/middlewareAdapter";
 
-import { makeSignUpController } from "./factories/makeSignUpController";
-import { makeListAllUsersController } from "./factories/makeListAllUsersController";
-import { makeUpdateUserController } from "./factories/makeUpdateUserController";
-import { makeDeleteUserController } from "./factories/makeDeleteUserController";
-import { makeSignInController } from "./factories/makeSignInController";
-import { makeGetLoggedUserController } from "./factories/makeGetLoggedUserController";
-import { makeAuthenticationMiddleware } from "./factories/makeAuthenticationMiddleware";
-import { makeRefreshTokenController } from "./factories/makeRefreshTokenController";
-import { makeAuthorizationMiddleware } from "./factories/makeAuthorizationMiddleware";
-import { makeUpdateLoggedUserController } from "./factories/makeUpdateLoggedUserController";
-import { makeDeleteLoggedUserController } from "./factories/makeDeleteLoggedUserController";
+import { makeAuthorizationMiddleware } from "./application/middlewares/authorization/makeAuthorizationMiddleware";
+import { makeAuthenticationMiddleware } from "./application/middlewares/authentication/makeAuthenticationMiddleware";
+
+import { makeSignUpController } from "./features/auth/sign-up/makeSignUpController";
+import { makeListAllUsersController } from "./features/users/list-all-users/makeListAllUsersController";
+import { makeUpdateUserController } from "./features/users/update-user/makeUpdateUserController";
+import { makeDeleteUserController } from "./features/users/delete-user/makeDeleteUserController";
+import { makeSignInController } from "./features/auth/sign-in/makeSignInController";
+import { makeGetLoggedUserController } from "./features/users/get-logged-user/makeGetLoggedUserController";
+import { makeRefreshTokenController } from "./features/auth/refresh-token/makeRefreshTokenController";
+import { makeUpdateLoggedUserController } from "./features/users/update-logged-user/makeUpdateLoggedUserController";
+import { makeDeleteLoggedUserController } from "./features/users/delete-logged-user/makeDeleteLoggedUserController";
 import { AppError } from "./application/errors/AppError";
 
 const app = express();
@@ -78,7 +79,6 @@ app.listen(port, () => {
 
 app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
   if (error) {
-    // Sentry.captureException(error);
     Sentry.logger.error(`${error.name}: ${error.description}`, [], {
       stackTrace: error.stack,
       status: error.statusCode,
@@ -90,7 +90,6 @@ app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
     res.status(error.statusCode).json({
       type: error.name,
       message: error.message,
-      // stack: error.stack, error.stack will be added in the log monitor
     });
   }
 });
