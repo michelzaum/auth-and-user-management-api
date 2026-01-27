@@ -16,7 +16,7 @@ import { makeGetLoggedUserController } from "./features/users/get-logged-user/ma
 import { makeAuthenticationMiddleware } from "./factories/makeAuthenticationMiddleware";
 import { makeRefreshTokenController } from "./features/auth/refresh-token/makeRefreshTokenController";
 import { makeAuthorizationMiddleware } from "./factories/makeAuthorizationMiddleware";
-import { makeUpdateLoggedUserController } from "./factories/makeUpdateLoggedUserController";
+import { makeUpdateLoggedUserController } from "./features/users/update-logged-user/makeUpdateLoggedUserController";
 import { makeDeleteLoggedUserController } from "./factories/makeDeleteLoggedUserController";
 import { AppError } from "./application/errors/AppError";
 

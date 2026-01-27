@@ -1,4 +1,4 @@
-import { prismaClient } from "../../lib/prismaClient";
+import { prismaClient } from "../../../lib/prismaClient";
 
 interface IInput {
   name: string;
@@ -11,7 +11,9 @@ export class UpdateLoggedUserUseCase {
     try {
       return await prismaClient.user.update({
         data: {
-          name, email, password,
+          name,
+          email,
+          password,
         },
         where: { id: userId },
       });
