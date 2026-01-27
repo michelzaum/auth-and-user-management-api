@@ -79,7 +79,6 @@ app.listen(port, () => {
 
 app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
   if (error) {
-    // Sentry.captureException(error);
     Sentry.logger.error(`${error.name}: ${error.description}`, [], {
       stackTrace: error.stack,
       status: error.statusCode,
@@ -91,7 +90,6 @@ app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
     res.status(error.statusCode).json({
       type: error.name,
       message: error.message,
-      // stack: error.stack, error.stack will be added in the log monitor
     });
   }
 });
