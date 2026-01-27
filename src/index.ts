@@ -9,7 +9,7 @@ import { middlewareAdapter } from "./adapters/middlewareAdapter";
 
 import { makeSignUpController } from "./features/auth/sign-up/makeSignUpController";
 import { makeListAllUsersController } from "./features/users/list-all-users/makeListAllUsersController";
-import { makeUpdateUserController } from "./factories/makeUpdateUserController";
+import { makeUpdateUserController } from "./features/users/update-user/makeUpdateUserController";
 import { makeDeleteUserController } from "./factories/makeDeleteUserController";
 import { makeSignInController } from "./features/auth/sign-in/makeSignInController";
 import { makeGetLoggedUserController } from "./features/users/get-logged-user/makeGetLoggedUserController";

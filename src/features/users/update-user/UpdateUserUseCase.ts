@@ -1,13 +1,13 @@
-import { prismaClient } from "../../lib/prismaClient";
-import { AppError } from "../errors/AppError";
-import { UserNotFound } from "../errors/UserNotFound";
+import { prismaClient } from "../../../lib/prismaClient";
+import { AppError } from "../../../application/errors/AppError";
+import { UserNotFound } from "../../../application/errors/UserNotFound";
 
 interface IInput {
   id: string;
   name: string;
   email: string;
   password: string;
-  role: 'USER' | 'ADMIN';
+  role: "USER" | "ADMIN";
 }
 
 export class UpdateUserUseCase {
@@ -20,17 +20,15 @@ export class UpdateUserUseCase {
       if (!userToUpdate) {
         const { name, httpCode, isOperational, message } = new UserNotFound(id);
 
-        throw new AppError(
-          name,
-          httpCode,
-          isOperational,
-          message,
-        );
+        throw new AppError(name, httpCode, isOperational, message);
       }
 
       const result = await tx.user.update({
         data: {
-          name, email, password, role,
+          name,
+          email,
+          password,
+          role,
         },
         where: { id },
       });
