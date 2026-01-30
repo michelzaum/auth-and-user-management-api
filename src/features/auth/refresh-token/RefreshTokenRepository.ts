@@ -1,3 +1,5 @@
+import { AppError } from "../../../application/errors/AppError";
+import { InvalidRefreshToken } from "../../../application/errors/InvalidRefreshToken";
 import { prismaClient } from "../../../lib/prismaClient";
 
 interface ICreateDTO {
@@ -7,13 +9,20 @@ interface ICreateDTO {
 
 export class RefreshTokenRepository {
   async findById(id: string) {
-    return prismaClient.refreshToken.findUnique({
-      where: { id },
-    });
+    try {
+      return await prismaClient.refreshToken.findUnique({
+        where: { id },
+      });
+    } catch {
+      const { name, httpCode, isOperational, message } =
+        new InvalidRefreshToken();
+
+      throw new AppError(name, httpCode, isOperational, message);
+    }
   }
 
   async create({ userId, expiresAt }: ICreateDTO) {
-    return prismaClient.refreshToken.create({
+    return await prismaClient.refreshToken.create({
       data: {
         userId,
         expiresAt,
@@ -22,7 +31,7 @@ export class RefreshTokenRepository {
   }
 
   async delete(id: string) {
-    return prismaClient.refreshToken.delete({
+    return await prismaClient.refreshToken.delete({
       where: { id },
     });
   }
