@@ -3,6 +3,7 @@ require("./instrument");
 import * as Sentry from "@sentry/node";
 
 import express, { NextFunction, Request, Response } from "express";
+import { rateLimit } from "express-rate-limit";
 
 import { routeAdapter } from "./adapters/routeAdapter";
 import { middlewareAdapter } from "./adapters/middlewareAdapter";
@@ -24,7 +25,15 @@ import { AppError } from "./application/errors/AppError";
 const app = express();
 const port = 3001;
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100,
+  message: "Too many requests from this IP. Try again later.",
+});
+
 app.use(express.json());
+
+app.use(limiter);
 
 app.post("/users", routeAdapter(makeSignUpController()));
 
